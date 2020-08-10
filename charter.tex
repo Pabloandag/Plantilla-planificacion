@@ -1,7 +1,10 @@
 \documentclass[11pt]{charter}
-
+\usepackage{enumitem}
+\usepackage{pdflscape}
+\usepackage{multirow}
+\usepackage[table,xcdraw]{xcolor}
 % El títulos de la memoria, se usa en la carátula y se puede usar el cualquier lugar del documento con el comando \ttitle
-\titulo{Título del proyecto} 
+\titulo{Implementación de un nodo sensor LoRa para monitoreo de maquinaria} 
 
 % Nombre del posgrado, se usa en la carátula y se puede usar el cualquier lugar del documento con el comando \degreename
 \posgrado{Carrera de Especialización en Sistemas Embebidos} 
@@ -11,18 +14,18 @@
 %\posgrado{Maestría en Internet de las cosas}
 
 % Tu nombre, se puede usar el cualquier lugar del documento con el comando \authorname
-\autor{Nombre del Autor} 
+\autor{Pablo Aguirre} 
 
 % El nombre del director y co-director, se puede usar el cualquier lugar del documento con el comando \supname y \cosupname y \pertesupname y \pertecosupname
-\director{Nombre del Director}
-\pertenenciaDirector{pertenencia} 
+\director{Marcelo Pistarelli}
+\pertenenciaDirector{UNR} 
 % FIXME:NO IMPLEMENTADO EL CODIRECTOR ni su pertenencia
 \codirector{} % si queda vacio no se deberíá incluir 
 \pertenenciaCoDirector{}
 
 % Nombre del cliente, quien va a aprobar los resultados del proyecto, se puede usar con el comando \clientename y \empclientename
-\cliente{Nombre del cliente}
-\empresaCliente{Empresa del cliente}
+\cliente{Alejandro Minniti}
+\empresaCliente{GENROD S.A.}
 
 % Nombre y pertenencia de los jurados, se pueden usar el cualquier lugar del documento con el comando \jurunoname, \jurdosname y \jurtresname y \perteunoname, \pertedosname y \pertetresname.
 \juradoUno{Nombre y Apellido (1)}
@@ -62,12 +65,8 @@
 \hline
 \rowcolor[HTML]{C0C0C0} 
 Revisión & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}Detalles de los cambios realizados} & Fecha      \\ \hline
-1.0      & Creación del documento                                          & 27/06/2020 \\ \hline
-1.1      &                                                                 & dd/mm/aaaa \\ \hline
-1.2      & Otro ejemplo \newline
-		   Con texto partido \newline
-		   En varias líneas \newline
-		   A propósito                                                     & dd/mm/aaaa \\ \hline
+1.0      & Creación del documento                                          & 10/08/2020 \\ \hline
+1.1 	 & Creación capítulos 1-11										   & 10/08/2020 \\ \hline
 \end{tabularx}
 \end{table}
 
@@ -84,7 +83,7 @@ Buenos Aires, \fechaInicioName
 
 \vspace{2cm}
 
-Por medio de la presente se acuerda con el Ing. \authorname\hspace{1px} que su Trabajo Final de la \degreename\hspace{1px} se titulará ``\ttitle'', consistirá esencialmente en el prototipo preliminar de un sistema de control de temperatura de un calefón, y tendrá un presupuesto preliminar estimado de 600 hs de trabajo y \textcolor{red}{\$XXX}, con fecha de inicio \fechaInicioName\hspace{1px} y fecha de presentación pública \fechaFinalName.
+Por medio de la presente se acuerda con el Ing. \authorname\hspace{1px} que su Trabajo Final de la \degreename\hspace{1px} se titulará ``\ttitle'', consistirá esencialmente en el prototipo preliminar de un sistema de control de variables de producción, y tendrá un presupuesto preliminar estimado de 600 hs de trabajo y \textcolor{red}{\$XXX}, con fecha de inicio \fechaInicioName\hspace{1px} y fecha de presentación pública \fechaFinalName.
 
 Se adjunta a esta acta la planificación inicial.
 
@@ -107,54 +106,55 @@ Se adjunta a esta acta la planificación inicial.
 \section{Descripción técnica-conceptual del proyecto a realizar}
 \label{sec:descripcion}
 
-\begin{consigna}{red}
-El objetivo es que el lector en una o dos páginas entienda de qué se trata el proyecto y cuáles son sus desafíos, su motivación y su importancia.
-Se debe destacar claramente cuál es el valor que agrega el proyecto a realizar. ``El presente proyecto se destaca especialmente por incorporar tal cosa... Esto lo diferencia de otros sistemas similares en que ...''
+El IIoT (\textit{Industrial Internet of Things}) consiste en maquinaria conectada a Internet y en avanzadas plataformas de análisis que procesan los datos que se producen. Los dispositivos IIoT van desde diminutos sensores ambientales hasta complejos robots industriales. Si bien la palabra ``industrial" puede referirse a almacenes, astilleros y fábricas, las tecnologías IIoT son muy prometedoras para una amplia gama de sectores industriales, como la agricultura, la sanidad, los servicios financieros, el comercio minorista y la publicidad.
 
-Puede ser útil incluir en esta sección la respuesta a alguna de estas preguntas:
-
-\begin{itemize}
-\item ¿Cómo se vincula este proyecto con la misión de la organización?
-\item ¿Cómo se inserta este proyecto en el modelo de negocio de la organización?
-\item ¿Ayuda a la explicación si se incluye un lienzo Canvas del Modelo de Negocio?
-\item ¿En qué estado del ciclo de vida está el producto que se desea reemplazar o mejorar?
-\item ¿Cuales son las necesidades que debe satisfacer?
-\item ¿Por dónde pasa la innovación?
-\end{itemize}
-
-La descripción técnica-conceptual \textbf{debe incluir al menos un diagrama en bloques del sistema }y una frase como la siguiente: ``En la Figura \ref{fig:diagBloques} se presenta el diagrama en bloques del sistema. Se observa que...''. Luego recién más abajo de haber puesto esta frase se pone la figura. La regla es que las figuras nunca pueden ir antes de ser mencionadas en el texto, porque sino el lector no entiende por qué de pronto aparece una figura.
+Los sensores forman parte de una variedad de roles en la industria moderna. Además de proveer datos para el control de procesos, asisten en la evaluación de calidad, monitoreo de productos, y hasta seguridad del personal. La llegada del software analítico basado en la nube en conjunto con inteligencia artificial también permitió el uso de datos suministrados por sensores para bajar costos de producción mediante optimización y mantenimiento predictivo.
+Para servir estos propósitos, existe una amplia variedad de tipos de sensores disponible, con versiones nuevas y mejoradas llegando de manera continua. En la Figura \ref{fig:sensores} se muestran los principales tipos de sensores utilizados en la actualidad.
 
 \vspace{25px}
 
 \begin{figure}[htpb]
 \centering 
-\includegraphics[width=.7\textwidth]{./Figuras/diagBloques.png}
+\includegraphics[width=.7\textwidth]{./Figuras/sensores.png}
+\caption{Principales tipos de sensores}
+\label{fig:sensores}
+\end{figure}
+
+\vspace{25px}
+
+GENROD S.A. es una empresa con fábrica propia de gabinetería y tubos dotada con maquinaria de última generación que posee sensores implementados de manera nativa para su control.
+Además también se utilizan máquinas que, si bien son perfectamente funcionales, carecen de esta capacidad de control que podría ser de suma utilidad para su monitoreo, pudiendo llevar a su optimización y mejora de productividad. Es por esto que la empresa decidió que sería provechoso poder agregar esta funcionalidad a algunas de sus máquinas.
+Existen soluciones en el mercado compuestas de distintos sensores, un gateway que recolecta información de estos y una plataforma de software que recopila y muestra los datos obtenidos que podrían solucionar la inquietud de la empresa. Sin embargo la empresa optó por invertir en el desarrollo de tecnología propia para poder obtener autonomía con soluciones personalizadas y de menor costo, junto con mayor control y entendimiento de ellas.
+
+Como primer paso para lograr esta visión se propuso el presente proyecto consistente en la implementación de un enlace LoRa mediante el cual un extremo recopilará datos de sensores y los enviará al otro extremo que se encargará de recibir estos datos y almacenarlos en una base de datos en una computadora, en la que se podrá obtener una visualización clara de los datos almacenados.
+Se optó por utilizar la tecnología LoRa por su capacidad para implementar soluciones de largo alcance (las instalaciones en las que se aplicará tienen alrededor de 20000 $m^2$ y se prevé una expansión) y su idoneidad para enviar datos de telemetría y sensores, con bajo consumo de energía y ancho de banda. Además el hecho de ser un enlace inalámbrico implica menores costos de instalación y materiales que una solución cableada.
+
+El proyecto planteado se presenta en la Figura \ref{fig:diagBloques}. En ella se pueden apreciar los nodos transmisor y receptor. El nodo transmisor tendrá la capacidad de adquirir información de uno o más sensores y la transmitirá mediante un enlace LoRa al nodo receptor, quien se encargará de recibir esta información y transmitirla a una computadora Raspberry Pi, donde será almacenada y podrá ser visualizada con una interfaz gráfica. Los nodos serán implementados con placas de desarrollo suministradas por la empresa.
+
+\vspace{25px}
+
+\begin{figure}[htpb]
+\centering 
+\includegraphics[width=.7\textwidth]{./Figuras/DiagDeBloques.jpg}
 \caption{Diagrama en bloques del sistema}
 \label{fig:diagBloques}
 \end{figure}
 
 \vspace{25px}
 
-El tamaño de la tipografía en la figura debe ser adecuado para que NO pase lo que ocurre acá, donde el lector debe esforzarse para poder leer el texto. Los colores usados en el diagrama deben ser adecuados, tal que ayuden a comprender mejor el diagrama.
-\end{consigna}
+Dentro de cada nodo se distinguen los siguientes módulos:
+\begin{itemize}
+\item[•] \textbf{Microcontrolador:} es el encargado de controlar las operaciones realizadas por los nodos. El microcontrolador presente en las placas de desarrollo es el STM32L072CZ.
+\item[•] \textbf{LoRa Transceiver:} módulo encargado de la comunicación LoRa. En la placa de desarrollo el módulo presente es el SX1276.
+\item[•] \textbf{Alimentación:} módulo encargado de la alimentación del nodo. En la placa de desarrollo la alimentación puede ser a través de baterías o una entrada micro USB.
+\item[•] \textbf{Indicadores de estado:} serán luces LED que indiquen de manera visual el estado del nodo (batería, errores de comunicación, transmisión de datos).
+\end{itemize}
+
+
 
 
 \section{Identificación y análisis de los interesados}
 \label{sec:interesados}
-
-\begin{consigna}{red} 
-Nota: (borrar esto y todas las consignas en color rojo antes de entregar este documento).
- 
-Es inusual que una misma persona esté en más de un rol, incluso en proyectos chicos.
- 
-Si se considera que una persona cumple dos o más roles, entonces sólo dejarla en el rol más importante. Por ejemplo:
-
-\begin{itemize}
-\item Si una persona es Cliente pero también colabora u orienta, dejarla solo como Cliente.
-\item Si una persona es el Responsable, no debe ser colocado también como Miembro del equipo.
-\end{itemize}
-
-Pero en cambio sí es usual que el Cliente y el Auspiciante sean el mismo, por ejemplo.
 
 \begin{table}[ht]
 %\caption{Identificación de los interesados}
@@ -163,112 +163,98 @@ Pero en cambio sí es usual que el Cliente y el Auspiciante sean el mismo, por e
 \hline
 \rowcolor[HTML]{C0C0C0} 
 Rol           & Nombre y Apellido & Organización 	& Puesto 	\\ \hline
-Auspiciante   &                   &              	&        	\\ \hline
-Cliente       & \clientename      &\empclientename	&        	\\ \hline
-Impulsor      &                   &              	&        	\\ \hline
+Cliente       & \clientename      &\empclientename	& Desarrollador	\\ \hline
 Responsable   & \authorname       & FIUBA        	& Alumno 	\\ \hline
-Colaboradores &                   &              	&        	\\ \hline
 Orientador    & \supname	      & \pertesupname 	& Director	Trabajo final \\ \hline
-Equipo        & miembro1 \newline 
-				miembro2          &              	&        	\\ \hline
-Opositores    &                   &              	&        	\\ \hline
-Usuario final &                   &              	&        	\\ \hline
+Usuario final &    -              &  GENROD S.A.   	& Análisis de datos	\\ \hline
 \end{tabularx}
 \end{table}
-
-El Director suele ser uno de los Orientadores.
-
-No dejar celdas vacías; si no hay nada que poner en una celda colocar un signo ``-''.
-
-No dejar filas vacías; si no hay nada que poner en una fila entonces eliminarla.
-
-Sería deseable listar a continuación de la tabla las principales características de cada interesado.
- 
-Por ejemplo:
-\begin{itemize}
-\item Auspiciante: es riguroso y exigente con la rendición de gastos. Tener mucho cuidado con esto.
-\item Equipo: Juan Perez, suele pedir licencia porque tiene un familiar con una enfermedad. Planificar considerando esto.
-\item Orientador: María Gómez, nos va a poder ayudar mucho con la gestión de impuestos.
-\end{itemize}
-
-\end{consigna}
-
 
 
 \section{1. Propósito del proyecto}
 \label{sec:proposito}
 
-\begin{consigna}{red}
-¿Por qué se hace el proyecto? ¿Qué se quiere lograr? 
+El propósito de este proyecto es desarrollar un prototipo de sistema capaz de comunicar información recibida de sensores colocados en una máquina de la fábrica a través de un enlace LoRa a una computadora, donde será almacenada y podrá ser visualizada.
 
-Se recomienda que sea solo un párrafo que empiece diciendo ``El propósito de este proyecto es...''.
-\end{consigna}
+En un plano más general el propósito de este proyecto es comenzar a generar conocimiento en los temas de sensores, programación de microcontroladores y comunicación LoRa para poder aplicarlo en proyectos futuros en busca de conseguir una fábrica más eficiente y controlada.
 
 \section{2. Alcance del proyecto}
 \label{sec:alcance}
 
-\begin{consigna}{red}
-¿Qué se incluye y que no se incluye en este proyecto?
+El presente proyecto incluirá diseño y creación de software para la implementación de un prototipo de sistema de monitoreo de maquinaria. Dicho sistema está comprendido por un par de nodos de transmisión y recepción de radiofrecuencia utilizando tecnología LoRa. Un nodo permitirá la lectura y transmisión de datos medidos por sensores mediante la implementación de interfaces de comunicación entre estos y el sistema embebido. Otro nodo recibirá la información transmitida de manera inalámbrica y la transferirá a una Raspberry Pi, donde será almacenada a una base de datos y podrá ser visualizada. La implementación a nivel hardware de los nodos se realizará con placas de desarrollo provistas por el cliente.
 
-Se refiere al trabajo a hacer para entregar el producto o resultado especificado. 
+El proyecto incluye:
+\begin{itemize}
+\item[•] Diseño del firmware de los nodos.
+\item[•] Implementación del firmware de los nodos.
+\item[•] Implementación del software encargado de almacenar los datos en una base de datos.
+\item[•] Implementación de una herramienta de visualización de los datos adquiridos.
+\end{itemize}
 
-Explicitar todo lo quede comprendido dentro del alcance del proyecto.
-
-Explicitar además todo lo que no quede incluido (``El presente proyecto no incluye...'')
-
-\end{consigna}
+El proyecto no incluye:
+\begin{itemize}
+\item[•] Diseño de hardware.
+\item[•] Implementación de una red de nodos.
+\end{itemize}
 
 
 \section{3. Supuestos del proyecto}
 \label{sec:supuestos}
 
-\begin{consigna}{red}
-``Para el desarrollo del presente proyecto se supone que: ...''
+Para el desarrollo del presente proyecto se supone que:
 
 \begin{itemize}
-\item Supuesto 1
-\item Supuesto 2...
+\item la empresa cliente proveerá los kits de desarrollo B-L072Z-LRWAN1 de ST.
+\item la empresa cliente se hará cargo de la compra de sensores para la adquisición de datos a ser transmitidos por el nodo transmisor.
+\item se podrán realizar pruebas dentro de la fábrica.
+\item serán respetados los tiempos de trabajo asignados al proyecto durante la etapa de planificación.
 \end{itemize}
-
-Por ejemplo, se podrían incluir supuestos respecto a disponibilidad de tiempo y recursos humanos y materiales, sobre la factibilidad técnica de distintos aspectos del proyecto, sobre otras cuestiones que sean necesarias para el éxito del proyecto como condiciones macroeconómicas o reglamentarias.
-\end{consigna}
 
 \section{4. Requerimientos}
 \label{sec:requerimientos}
 
-\begin{consigna}{red}
-Los requerimientos deben numerarse y de ser posible agruparlos por afinidad:
-
 \begin{enumerate}
-\item Grupo de requerimientos asociados con...
+\item Requerimientos funcionales:
 	\begin{enumerate}
-	\item Requerimiento 1
-	\item Requerimiento 2
-	\item Requerimiento 3 (prioridad menor)
+	\item Nodo transmisor
+		\begin{enumerate}[label*=\arabic*.]
+		\item El nodo deberá ser capaz de realizar la lectura de diversos sensores.
+		\item El nodo deberá transmitir información de los sensores conectados de manera periódica.
+		\item La transmisión de datos deberá ser implementada utilizando LoRa.
+		\item La alimentación debe ser implementada mediante baterías AAA.
+		\item La nodo deberá tener un sleep-mode configurable para administrar la duración de la batería.
+		\item El nodo deberá informar de manera visual cuando tenga poca batería.
+		\item El nivel bajo de batería deberá ser informado al nodo receptor.
+		\item El nodo deberá informar de manera visual cuando realice una transmisión.
+		\end{enumerate}
+	\item Nodo receptor
+		\begin{enumerate}[label*=\arabic*.]
+		\item El nodo deberá recibir información de manera inalámbrica utilizando LoRa.
+		\item El nodo deberá informar de manera visual cuando reciba datos.
+		\item El nodo deberá reenviar la información recibida hacia la PC utilizada para el almacenamiento de datos.
+		\end{enumerate}
+	\item Software de manejo de datos
+		\begin{enumerate}[label*=\arabic*.]
+		\item La información recibida del nodo receptor deberá ser almacenada en una base de datos.
+		\item La herramienta de visualización deberá permitir ver más de una variable a la vez.
+		\item La herramienta de visualización deberá permitir configurar el span de tiempo que se quiere ver.
+		\end{enumerate}
 	\end{enumerate}
-\item Grupo de requerimientos asociados con...
+\item Requerimientos no funcionales
 	\begin{enumerate}
-	\item Requerimiento 1
-	\item Requerimiento 2 (prioridad menor)
+	\item Documentación
+		\begin{enumerate}[label*=\arabic*.]
+		\item Se deberá elaborar un informe de avance del proyecto.
+		\item Se deberá elaborar la documentación del firmware desarrollado.
+		\item Se deberá elaborar documentación del uso del sistema.
+		\end{enumerate}
+	\item Testing
+		\begin{enumerate}[label*=\arabic*.]
+		\item Deberán realizarse pruebas de funcionamiento del sistema antes de su entrega.
+		\end{enumerate}
 	\end{enumerate}
 \end{enumerate}
 
-Leyendo los requerimientos se debe poder interpretar cómo será el proyecto y su funcionalidad.
-
-De ser posible indicar cómo se obtuvieron cada uno de los requerimientos 
-
-Indicar claramente cuál es la prioridad entre los distintos requerimientos. 
-
-No olvidarse de que los requerimientos incluyen a las regulaciones y normas vigentes!!!
-
-Y al escribirlos seguir las siguientes reglas:
-\begin{itemize}
-\item Ser breve y conciso (nadie lee cosas largas). 
-\item Ser específico: no dejar lugar a confusiones.
-\item Expresar los requerimientos en términos que sean cuantificables y medibles.
-\end{itemize}
-
-\end{consigna}
 
 \section{Historias de usuarios (\textit{Product backlog})}
 \label{sec:backlog}
@@ -280,247 +266,143 @@ Descripción: En esta sección se deben incluir las historias de usuarios y su p
 \section{5. Entregables principales del proyecto}
 \label{sec:entregables}
 
-\begin{consigna}{red}
-Cosas como: 
+Los entregables del proyecto son:
+ 
 \begin{itemize}
-\item Manual de uso
-\item Diagrama esquemático
-\item Código fuente
-\item Diagrama de instalación
-\item Informe final
+\item Firmware nodo transmisor.
+\item Firmware nodo receptor.
+\item Interfaz de visualización.
+\item Documentación del sistema.
+\item Informe final.
 
 \end{itemize}
 
-\end{consigna}
+\newpage
 
 \section{6. Desglose del trabajo en tareas}
 \label{sec:wbs}
-
-\begin{consigna}{red}
-Se recomienda mostrar el WBS mediante una lista indexada:
-
 \begin{enumerate}
-\item Grupo de tareas 1
+\item Gestión 																	\hfill \textbf{190 hs}
 	\begin{enumerate}
-	\item Tarea 1 (tantas hs)
-	\item Tarea 2 (tantas hs)
-	\item Tarea 3 (tantas hs)
+	\item Planificación del proyecto 											\hfill 15
+	\item Redacción del informe de avance 										\hfill 25
+	\item Redacción documentación nodo transmisor 								\hfill 20
+	\item Redacción documentación nodo receptor									\hfill 20
+	\item Redacción manual de uso del sistema									\hfill 30
+	\item Redacción del informe final 											\hfill 60
+	\item Redacción de la presentación final									\hfill 20
 	\end{enumerate}
-\item Grupo de tareas 2
+\item Análisis e investigación													\hfill \textbf{70 hs}
 	\begin{enumerate}
-	\item Tarea 1 (tantas hs)
-	\item Tarea 2 (tantas hs)
-	\item Tarea 3 (tantas hs)
+	\item Búsqueda de información sobre programación de microcontroladores		\hfill 30
+	\item Búsqueda de información LoRa											\hfill 20
+	\item Búsqueda de información sobre interfaces de visualización				\hfill 20	
 	\end{enumerate}
-	\item Grupo de tareas 3
+\item Desarrollo de software													\hfill \textbf{230 hs}
 	\begin{enumerate}
-	\item Tarea 1 (tantas hs)
-	\item Tarea 2 (tantas hs)
-	\item Tarea 3 (tantas hs)
-	\item Tarea 4 (tantas hs)
-	\item Tarea 5 (tantas hs)
+	\item Selección y configuración del entorno de diseño						\hfill 10
+	\item Diseño de arquitectura de firmware de los nodos						\hfill 40
+	\item Desarrollo rutinas de lectura y transmisión de datos					\hfill 30
+	\item Desarrollo rutinas de control de estado del nodo						\hfill 30
+	\item Integración de firmware propio con firmware del módulo de transmisión	\hfill 30
+	\item Diseño de arquitectura de software de visualización					\hfill 20
+	\item Desarrollo software de adquisición y visualización de datos			\hfill 40
+	\item Diseño de detalle														\hfill 30
+	\end{enumerate}
+\item Testing																	\hfill \textbf{140 hs}
+	\begin{enumerate}
+	\item Pruebas de firmware de nodo transmisor								\hfill 20
+	\item Pruebas de firmware de nodo receptor									\hfill 20
+	\item Pruebas de software de adquisición y visualización					\hfill 10
+	\item Pruebas de comunicación												\hfill 20
+	\item Pruebas de sistema completo											\hfill 30
+	\item Corrección de errores													\hfill 40
 	\end{enumerate}
 \end{enumerate}
 
-Cantidad total de horas: (tantas hs)
+Cantidad total de horas: 630 hs
 
-Se recomienda que no haya ninguna tarea que lleve más de 40 hs. 
-
-\end{consigna}
-
+\newpage 
 \section{7. Diagrama de Activity On Node}
 \label{sec:AoN}
 
-\begin{consigna}{red}
-Armar el AoN a partir del WBS definido en la etapa anterior. 
-
-%La figura \ref{fig:AoN} fue elaborada con el paquete latex tikz y pueden consultar la siguiente referencia \textit{online}:
-
-%\url{https://www.overleaf.com/learn/latex/LaTeX_Graphics_using_TikZ:_A_Tutorial_for_Beginners_(Part_3)\%E2\%80\%94Creating_Flowcharts}
-
-\end{consigna}
-
+En la Figura \ref{fig:AoN} se muestra el diagrama de \textit{Activity on Node} del proyecto. La unidad de tiempo está expresada en horas.
+Se puede observar que existen dos caminos críticos de igual longitud. Estos se encuentran marcados en la figura con un trazo de línea más grueso.
 \begin{figure}[htpb]
 \centering 
-\includegraphics[width=.8\textwidth]{./Figuras/AoN.png}
+\includegraphics[width=.8\textwidth]{./Figuras/AON.jpg}
 \caption{Diagrama en \textit{Activity on Node}}
 \label{fig:AoN}
 \end{figure}
 
-Indicar claramente en qué unidades están expresados los tiempos.
-De ser necesario indicar los caminos semicríticos y analizar sus tiempos mediante un cuadro.
-Es recomendable usar colores y un cuadro indicativo describiendo qué representa cada color, como se muestra en el siguiente ejemplo:
 
 
 
 \section{8. Diagrama de Gantt}
 \label{sec:gantt}
 
-\begin{consigna}{red}
-Utilizar el software Gantter for Google Drive o alguno similar para dibujar el diagrama de Gantt.
+El diagrama de Gantt del proyecto se presenta en la Figura \ref{fig:Gantt}. En el mismo se pueden apreciar las fechas de inicio y finalización de cada tarea, así como también sus dependencias.
 
-Existen muchos programas y recursos \textit{online} para hacer diagramas de gantt, entre las cuales destacamos:
-
-\begin{itemize}
-\item Planner
-\item GanttProject
-\item Trello + \textit{plugins}. En el siguiente link hay un tutorial oficial: \\ \url{https://blog.trello.com/es/diagrama-de-gantt-de-un-proyecto}
-\item Creately, herramienta online colaborativa. \\\url{https://creately.com/diagram/example/ieb3p3ml/LaTeX}
-\item Se puede hacer en latex con el paquete \textit{pgfgantt}\\ \url{http://ctan.dcc.uchile.cl/graphics/pgf/contrib/pgfgantt/pgfgantt.pdf}
-\end{itemize}
-
-Pegar acá una captura de pantalla del diagrama de Gantt, cuidando que la letra sea suficientemente grande como para ser legible. 
-Si el diagrama queda demasiado ancho, se puede pegar primero la ``tabla'' del Gantt y luego pegar la parte del diagrama de barras del diagrama de Gantt.
-
-Configurar el software para que en la parte de la tabla muestre los códigos del EDT (WBS).\\
-Configurar el software para que al lado de cada barra muestre el nombre de cada tarea.\\
-Revisar que la fecha de finalización coincida con lo indicado en el Acta Constitutiva.
-
-En la figura \ref{fig:gantt}, se muestra un ejemplo de diagrama de gantt realizado con el paquete de \textit{pgfgantt}. En la plantilla pueden ver el código que lo genera y usarlo de base para construir el propio.
-
-\begin{figure}[htbp]
-\begin{center}
-\begin{ganttchart}{1}{12}
-  \gantttitle{2020}{12} \\
-  \gantttitlelist{1,...,12}{1} \\
-  \ganttgroup{Group 1}{1}{7} \\
-  \ganttbar{Task 1}{1}{2} \\
-  \ganttlinkedbar{Task 2}{3}{7} \ganttnewline
-  \ganttmilestone{Milestone o hito}{7} \ganttnewline
-  \ganttbar{Final Task}{8}{12}
-  \ganttlink{elem2}{elem3}
-  \ganttlink{elem3}{elem4}
-\end{ganttchart}
-\end{center}
-\caption{Diagrama de gantt de ejemplo}
-\label{fig:gantt}
+\begin{landscape}
+\begin{figure}[htpb]
+\centering 
+\includegraphics[width=1.5\textheight]{./Figuras/gantt.png}
+\caption{Diagrama en \textit{Diagrama de Gantt del proyecto}}
+\label{fig:Gantt}
 \end{figure}
-
-\end{consigna}
-
+\end{landscape}
 \section{9. Matriz de uso de recursos de materiales}
 \label{sec:recursos}
 
 
-\begin{table}[htpb]
-\label{tab:recursos}
+\begin{table}[htbp]
 \centering
-\begin{tabularx}{\linewidth}{@{}|c|X|X|X|X|X|@{}}
+\begin{tabularx}{\linewidth}{|c|X|c|c|c|c|}
 \hline
-\cellcolor[HTML]{C0C0C0} & \cellcolor[HTML]{C0C0C0} & \multicolumn{4}{c|}{\cellcolor[HTML]{C0C0C0}Recursos requeridos (horas)} \\ \cline{3-6} 
-\multirow{-2}{*}{\cellcolor[HTML]{C0C0C0}\begin{tabular}[c]{@{}c@{}}Código\\ WBS\end{tabular}} & \multirow{-2}{*}{\cellcolor[HTML]{C0C0C0}\begin{tabular}[c]{@{}c@{}}Nombre \\ tarea\end{tabular}} & Material 1 & Material 2 & Material 3 & Material 4 \\ \hline
- &  &  &  &  &  \\ \hline
- &  &  &  &  &  \\ \hline
- &  &  &  &  &  \\ \hline
- &  &  &  &  &  \\ \hline
-\end{tabularx}%
+\cellcolor[HTML]{C0C0C0}                                                                       & \cellcolor[HTML]{C0C0C0}                                                                            & \multicolumn{4}{c|}{\cellcolor[HTML]{C0C0C0}Recursos requeridos (horas)} \\ \cline{3-6} 
+\multirow{-2}{*}{\cellcolor[HTML]{C0C0C0}\begin{tabular}[c]{@{}c@{}}Código\\ WBS\end{tabular}} & \multirow{-2}{*}{\cellcolor[HTML]{C0C0C0}\begin{tabular}[c]{@{}c@{}}Nombre\\ de tarea\end{tabular}} & PC       & Placas de desarrollo      & Sensores      & Raspberry Pi      \\ \hline
+1.                                                                                             & Gestión                                                                                             & 190      &                           &               &                   \\ \hline
+2.                                                                                             & Análisis e investigación                                                                            & 70       &                           &               &                   \\ \hline
+3.                                                                                             & Desarrollo de software                                                                              & 230      & 100                       & 100           & 40                \\ \hline
+4.1.                                                                                           & Pruebas de firmware de nodo transmisor                                                              &          & 20                        & 20            &                   \\ \hline
+4.2.                                                                                           & Pruebas de firmware de nodo receptor                                                                &          & 20                        & 20            & 20                \\ \hline
+4.3.                                                                                           & Pruebas de software de adquisición y visualización                                                  &          &                           &               & 10                \\ \hline
+4.4.                                                                                           & Pruebas de comunicacion                                                                             &          & 20                        & 20            & 20                \\ \hline
+4.5.                                                                                           & Pruebas de sistema completo                                                                         &          & 30                        & 30            & 30                \\ \hline
+4.6.                                                                                           & Corrección de errores                                                                               & 40       & 40                        & 40            & 40                \\ \hline
+\end{tabularx}
 \end{table}
 
 
 \section{10. Presupuesto detallado del proyecto}
 \label{sec:presupuesto}
 
-\begin{consigna}{red}
-Si el proyecto es complejo entonces separarlo en partes:
-\begin{itemize}
-\item Un total global, indicando el subtotal acumulado por cada una de las áreas.
-\item El desglose detallado del subtotal de cada una de las áreas.
-\end{itemize}
-
-IMPORTANTE: No olvidarse de considerar los COSTOS INDIRECTOS.
-
-\end{consigna}
-
-\begin{table}[htpb]
-\centering
-\begin{tabularx}{\linewidth}{@{}|X|c|r|r|@{}}
+\begin{table}[htbp]
+\begin{tabular}{|c|c|c|c|c|}
 \hline
 \rowcolor[HTML]{C0C0C0} 
-\multicolumn{4}{|c|}{\cellcolor[HTML]{C0C0C0}COSTOS DIRECTOS} \\ \hline
-\rowcolor[HTML]{C0C0C0} 
-Descripción &
-  \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}Cantidad} &
-  \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}Valor unitario} &
-  \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}Valor total} \\ \hline
- &
-  \multicolumn{1}{c|}{} &
-  \multicolumn{1}{c|}{} &
-  \multicolumn{1}{c|}{} \\ \hline
- &
-  \multicolumn{1}{c|}{} &
-  \multicolumn{1}{c|}{} &
-  \multicolumn{1}{c|}{} \\ \hline
-\multicolumn{1}{|l|}{} &
-   &
-   &
-   \\ \hline
-\multicolumn{1}{|l|}{} &
-   &
-   &
-   \\ \hline
-\multicolumn{3}{|c|}{SUBTOTAL} &
-  \multicolumn{1}{c|}{} \\ \hline
-\rowcolor[HTML]{C0C0C0} 
-\multicolumn{4}{|c|}{\cellcolor[HTML]{C0C0C0}COSTOS INDIRECTOS} \\ \hline
-\rowcolor[HTML]{C0C0C0} 
-Descripción &
-  \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}Cantidad} &
-  \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}Valor unitario} &
-  \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}Valor total} \\ \hline
-\multicolumn{1}{|l|}{} &
-   &
-   &
-   \\ \hline
-\multicolumn{1}{|l|}{} &
-   &
-   &
-   \\ \hline
-\multicolumn{1}{|l|}{} &
-   &
-   &
-   \\ \hline
-\multicolumn{3}{|c|}{SUBTOTAL} &
-  \multicolumn{1}{c|}{} \\ \hline
-\rowcolor[HTML]{C0C0C0}
-\multicolumn{3}{|c|}{TOTAL} &
-   \\ \hline
-\end{tabularx}%
+Categoría         & Detalle               & Cantidad & Costo unitario (ARS) & Costo (ARS) \\ \hline
+Costos directos   & Horas de ingeniería   & 630      & 400                  & 252000      \\ \hline
+Costos indirectos & 30 \% costos directos & -        & -                    & 75600       \\ \hline
+\multicolumn{4}{|c|}{\textbf{Total costos del proyecto}}                    & 3276000     \\ \hline
+\end{tabular}
 \end{table}
-
 
 \section{11. Matriz de asignación de responsabilidades}
 \label{sec:responsabilidades}
-\begin{consigna}{red}
-Establecer la matriz de asignación de responsabilidades y el manejo de la autoridad completando la siguiente tabla:
 
-\begin{table}[htpb]
-\centering
-\resizebox{\textwidth}{!}{%
-\begin{tabular}{|c|c|c|c|c|c|}
+\begin{table}[htbp]
+\begin{tabular}{|c|c|c|c|c|}
 \hline
 \rowcolor[HTML]{C0C0C0} 
-\cellcolor[HTML]{C0C0C0} &
-  \cellcolor[HTML]{C0C0C0} &
-  \multicolumn{4}{c|}{\cellcolor[HTML]{C0C0C0}Listar todos los nombres y roles del proyecto} \\ \cline{3-6} 
+\cellcolor[HTML]{C0C0C0}                                                                       & \cellcolor[HTML]{C0C0C0}                                     & \multicolumn{3}{c|}{\cellcolor[HTML]{C0C0C0}Listar todos los nombres y roles del proyecto}                                                                                                                                                      \\ \cline{3-5} 
 \rowcolor[HTML]{C0C0C0} 
-\cellcolor[HTML]{C0C0C0} &
-  \cellcolor[HTML]{C0C0C0} &
-  Responsable &
-  Orientador &
-  Equipo &
-  Cliente \\ \cline{3-6} 
-\rowcolor[HTML]{C0C0C0} 
-\multirow{-3}{*}{\cellcolor[HTML]{C0C0C0}\begin{tabular}[c]{@{}c@{}}Código\\ WBS\end{tabular}} &
-  \multirow{-3}{*}{\cellcolor[HTML]{C0C0C0}Nombre de la tarea} &
-  \authorname &
-  \supname &
-  Nombre de alguien &
-  \clientename \\ \hline
- &  &  &  &  &  \\ \hline
- &  &  &  &  &  \\ \hline
- &  &  &  &  &  \\ \hline
-\end{tabular}%
-}
+\multirow{-2}{*}{\cellcolor[HTML]{C0C0C0}\begin{tabular}[c]{@{}c@{}}Código\\ WBS\end{tabular}} & \multirow{-2}{*}{\cellcolor[HTML]{C0C0C0}Nombre de la tarea} & \begin{tabular}[c]{@{}c@{}}Responsable\\ \authorname\end{tabular} & \begin{tabular}[c]{@{}c@{}}Orientador\\ \supname\end{tabular} & \begin{tabular}[c]{@{}c@{}}Cliente\\ \clientename\end{tabular} \\ \hline
+1.                                                                                             & Gestión                                                      & P                                                                                & C,A                                                                          & C,A                                                                           \\ \hline
+2.                                                                                             & Análisis e investigación                                     & P                                                                                & C                                                                            & I                                                                             \\ \hline
+3.                                                                                             & Desarrollo de software                                       & P                                                                                & C,A                                                                          & A                                                                             \\ \hline
+5.                                                                                             & Testing                                                      & P                                                                                & C                                                                            & A                                                                             \\ \hline
+\end{tabular}
 \end{table}
 
 {\footnotesize
@@ -534,12 +416,6 @@ Referencias:
 \end{itemize}
 } %footnotesize
 
-Una de las columnas debe ser para el Director, ya que se supone que participará en el proyecto.
-A su vez se debe cuidar que no queden muchas tareas seguidas sin ``A'' o ``I''.
-
-Importante: es redundante poner ``I/A'' o ``I/C'', porque para aprobarlo o responder consultas primero la persona debe ser informada.
-
-\end{consigna}
 
 \section{12. Gestión de riesgos}
 \label{sec:riesgos}
