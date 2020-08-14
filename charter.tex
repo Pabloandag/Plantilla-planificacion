@@ -18,7 +18,7 @@
 
 % El nombre del director y co-director, se puede usar el cualquier lugar del documento con el comando \supname y \cosupname y \pertesupname y \pertecosupname
 \director{Marcelo Pistarelli}
-\pertenenciaDirector{UNR} 
+\pertenenciaDirector{FCEIA-UNR} 
 % FIXME:NO IMPLEMENTADO EL CODIRECTOR ni su pertenencia
 \codirector{} % si queda vacio no se deberíá incluir 
 \pertenenciaCoDirector{}
@@ -67,6 +67,7 @@
 Revisión & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}Detalles de los cambios realizados} & Fecha      \\ \hline
 1.0      & Creación del documento                                          & 10/08/2020 \\ \hline
 1.1 	 & Creación capítulos 1-11										   & 10/08/2020 \\ \hline
+1.2 	 & Creación capítulos 12-17										   & 14/08/2020 \\ \hline
 \end{tabularx}
 \end{table}
 
@@ -144,9 +145,9 @@ El proyecto planteado se presenta en la Figura \ref{fig:diagBloques}. En ella se
 
 Dentro de cada nodo se distinguen los siguientes módulos:
 \begin{itemize}
-\item[•] \textbf{Microcontrolador:} es el encargado de controlar las operaciones realizadas por los nodos. El microcontrolador presente en las placas de desarrollo es el STM32L072CZ.
-\item[•] \textbf{LoRa Transceiver:} módulo encargado de la comunicación LoRa. En la placa de desarrollo el módulo presente es el SX1276.
-\item[•] \textbf{Alimentación:} módulo encargado de la alimentación del nodo. En la placa de desarrollo la alimentación puede ser a través de baterías o una entrada micro USB.
+\item[•] \textbf{Microcontrolador:} es el encargado de controlar las operaciones realizadas por los nodos. Se utilizará un microcontrolador de la familia STM32 de microcontroladores de bajo consumo.
+\item[•] \textbf{LoRa Transceiver:} módulo encargado de la comunicación LoRa.
+\item[•] \textbf{Alimentación:} módulo encargado de la alimentación del nodo. El nodo deberá poder ser alimentado a través de baterías o una entrada micro USB.
 \item[•] \textbf{Indicadores de estado:} serán luces LED que indiquen de manera visual el estado del nodo (batería, errores de comunicación, transmisión de datos).
 \end{itemize}
 
@@ -204,7 +205,7 @@ El proyecto no incluye:
 Para el desarrollo del presente proyecto se supone que:
 
 \begin{itemize}
-\item la empresa cliente proveerá los kits de desarrollo B-L072Z-LRWAN1 de ST.
+\item la empresa cliente proveerá los kits de desarrollo necesarios para el desarrollo.
 \item la empresa cliente se hará cargo de la compra de sensores para la adquisición de datos a ser transmitidos por el nodo transmisor.
 \item se podrán realizar pruebas dentro de la fábrica.
 \item serán respetados los tiempos de trabajo asignados al proyecto durante la etapa de planificación.
@@ -218,11 +219,11 @@ Para el desarrollo del presente proyecto se supone que:
 	\begin{enumerate}
 	\item Nodo transmisor
 		\begin{enumerate}[label*=\arabic*.]
-		\item El nodo deberá ser capaz de realizar la lectura de diversos sensores.
+		\item El nodo deberá ser capaz de realizar la lectura de un sensor de humedad y temperatura.
 		\item El nodo deberá transmitir información de los sensores conectados de manera periódica.
 		\item La transmisión de datos deberá ser implementada utilizando LoRa.
 		\item La alimentación debe ser implementada mediante baterías AAA.
-		\item La nodo deberá tener un sleep-mode configurable para administrar la duración de la batería.
+		\item El nodo deberá tener un sleep-mode configurable para administrar la duración de la batería.
 		\item El nodo deberá informar de manera visual cuando tenga poca batería.
 		\item El nivel bajo de batería deberá ser informado al nodo receptor.
 		\item El nodo deberá informar de manera visual cuando realice una transmisión.
@@ -259,9 +260,16 @@ Para el desarrollo del presente proyecto se supone que:
 \section{Historias de usuarios (\textit{Product backlog})}
 \label{sec:backlog}
 
-\begin{consigna}{red}
-Descripción: En esta sección se deben incluir las historias de usuarios y su ponderación (\textit{history points}). Recordar que las historias de usuarios son descripciones cortas y simples de una característica contada desde la perspectiva de la persona que desea la nueva capacidad, generalmente un usuario o cliente del sistema. La ponderación es un número entero que representa el tamaño de la historia comparada con otras historias de similar tipo.
-\end{consigna}
+Se identificaron las historias de usuario detalladas a continuación. Éstas historias fueron ponderadas según el volumen de trabajo que implicaría satisfacer cada una de ellas (1-10).
+  
+\begin{itemize}
+\item[•] Como analista de datos, quiero poder ver información de la máquina monitoreada con una interfaz gráfica. (5)
+\item[•] Como analista de datos, quiero poder saber si el nodo encargado de la lectura de sensores tiene batería baja desde la interfaz de visualización. (7)
+\item[•] Como analista de datos, quiero poder cambiar el span de tiempo que se muestra de los datos en la interfaz de visualización. (6)
+\item[•] Como analista de datos, quiero poder ver la información de múltiples sensores en un mismo gráfico. (3)
+\item[•] Como técnico, quiero saber cuando hace falta cambiar las baterías del nodo transmisor.(4)
+\item[•] Como técnico, quiero que la transmisión de datos sea de manera inalámbrica para facilitar el mantenimiento. (8)
+\end{itemize}
 
 \section{5. Entregables principales del proyecto}
 \label{sec:entregables}
@@ -271,6 +279,7 @@ Los entregables del proyecto son:
 \begin{itemize}
 \item Firmware nodo transmisor.
 \item Firmware nodo receptor.
+\item Software de recepción y almacenamientp de datos
 \item Interfaz de visualización.
 \item Documentación del sistema.
 \item Informe final.
@@ -294,7 +303,7 @@ Los entregables del proyecto son:
 	\end{enumerate}
 \item Análisis e investigación													\hfill \textbf{70 hs}
 	\begin{enumerate}
-	\item Búsqueda de información sobre programación de microcontroladores		\hfill 30
+	\item Análisis de las plataformas de hardware disponibles en el mercado		\hfill 30
 	\item Búsqueda de información LoRa											\hfill 20
 	\item Búsqueda de información sobre interfaces de visualización				\hfill 20	
 	\end{enumerate}
@@ -416,175 +425,267 @@ Referencias:
 \end{itemize}
 } %footnotesize
 
+\newpage
 
 \section{12. Gestión de riesgos}
 \label{sec:riesgos}
 
-\begin{consigna}{red}
 a) Identificación de los riesgos (al menos cinco) y estimación de sus consecuencias:
  
-Riesgo 1: detallar el riesgo (riesgo es algo que si ocurre altera los planes previstos)
+\textbf{Riesgo 1:} No disponer de tiempo suficiente para llevar a cabo el proyecto
 \begin{itemize}
-\item Severidad (S): mientras más severo, más alto es el número (usar números del 1 al 10).\\
-Justificar el motivo por el cual se asigna determinado número de severidad (S).
-\item Probabilidad de ocurrencia (O): mientras más probable, más alto es el número (usar del 1 al 10).\\
-Justificar el motivo por el cual se asigna determinado número de (O). 
+\item Severidad (9): Implicaría que el proyecto no sea terminado antes de la fecha de entrega.
+\item Probabilidad de ocurrencia (5): El responsable del proyecto tiene una jornada laboral de 8 horas sin contar las horas de cursado de la CESE. 
 \end{itemize}   
 
-Riesgo 2:
+\textbf{Riesgo 2:} Mala planificación del proyecto
 \begin{itemize}
-\item Severidad (S): 
-\item Ocurrencia (O):
+\item Severidad (8): Implica que el proyecto no sea terminado antes de la fecha de entrega
+\item Probabilidad de ocurrencia (6): El responsable del proyecto no tiene mucha experiencia en la planificación de proyectos.
 \end{itemize}
 
-Riesgo 3:
+\textbf{Riesgo 3:} No cumplir con los requerimientos planteados para el proyecto.
 \begin{itemize}
-\item Severidad (S): 
-\item Ocurrencia (O):
+\item Severidad (8): Implicaría replantear el proyecto, no terminar con la carrera y una posible desvinculación con la empresa. 
+\item Probabilidad de ocurrencia (3): Durante todo el desarrollo se informará sobre el proceso y avance con fin de establecer resultados medibles.
 \end{itemize}
 
+\textbf{Riesgo 4:} Problemas de compatibilidad durante la integración del sistema.
+\begin{itemize}
+\item Severidad(7): Implica un cambio en el diseño del proyecto y un desfase en los tiempos de entrega.
+\item Probabilidad de ocurrencia (4):
+\end{itemize}
+
+\textbf{Riesgo 5:} Pérdida total o parcial del código desarrollado.
+\begin{itemize}
+\item Severidad(9): Implicaría importantes retrasos en el desarrollo del trabajo.
+\item Probabilidad de ocurrencia (1): Se utilizará un sistema de control de versiones con backup online durante toda la duración del desarrollo de software.
+\end{itemize}
 
 b) Tabla de gestión de riesgos:      (El RPN se calcula como RPN=SxO)
 
-\begin{table}[htpb]
-\centering
-\begin{tabularx}{\linewidth}{@{}|X|c|c|c|c|c|c|@{}}
+\begin{table}[htbp]
+\begin{tabular}{|c|c|c|c|c|c|c|}
 \hline
 \rowcolor[HTML]{C0C0C0} 
-Riesgo & S & O & RPN & S* & O* & RPN* \\ \hline
-       &   &   &     &    &    &      \\ \hline
-       &   &   &     &    &    &      \\ \hline
-       &   &   &     &    &    &      \\ \hline
-       &   &   &     &    &    &      \\ \hline
-       &   &   &     &    &    &      \\ \hline
-\end{tabularx}%
+Riesgo & Severidad & Ocurrencia & RPN*                       & Severidad* & Ocurrencia* & RPN*                     \\ \hline 
+1      & 9         & 5          & \cellcolor[HTML]{FD6864}45 &     9      &     2       & \cellcolor[HTML]{34FF34}18\\ \hline
+2      & 8         & 6          & \cellcolor[HTML]{FD6864}48 &     8      &     3       & \cellcolor[HTML]{34FF34}24\\ \hline
+3      & 8         & 3          & \cellcolor[HTML]{34FF34}24 &            &             &                          \\ \hline
+4      & 7         & 4          & \cellcolor[HTML]{34FF34}28 &            &             &                          \\ \hline
+5      & 9         & 1          & \cellcolor[HTML]{34FF34}9  &            &             &                          \\ \hline
+\end{tabular}
 \end{table}
 
 Criterio adoptado: 
-Se tomarán medidas de mitigación en los riesgos cuyos números de RPN sean mayores a ....
-
-Nota: los valores marcados con (*) en la tabla corresponden luego de haber aplicado la mitigación.
+Se tomarán medidas de mitigación en los riesgos cuyos números de RPN sean mayores a 30
 
 c) Plan de mitigación de los riesgos que originalmente excedían el RPN máximo establecido:
  
-Riesgo 1: Plan de mitigación (si por el RPN fuera necesario elaborar un plan de mitigación).
-  Nueva asignación de S y O, con su respectiva justificación:
-  - Severidad (S): mientras más severo, más alto es el número (usar números del 1 al 10).
-          Justificar el motivo por el cual se asigna determinado número de severidad (S).
-  - Probabilidad de ocurrencia (O): mientras más probable, más alto es el número (usar del 1 al 10).
-          Justificar el motivo por el cual se asigna determinado número de (O).
+\textbf{Riesgo 1: }Se podrán utilizar horas correspondientes a la jornada laboral para el avance del proyecto, debido a que éste es de alta prioridad dentro de la empresa.
 
-Riesgo 2: Plan de mitigación (si por el RPN fuera necesario elaborar un plan de mitigación).
- 
-Riesgo 3: Plan de mitigación (si por el RPN fuera necesario elaborar un plan de mitigación)
+  - Severidad (9): La severidad se mantiene.
 
-\end{consigna}
+  - Probabilidad de ocurrencia (2): Disminuye la probabilidad de ocurrencia.
+
+\textbf{Riesgo 2:} Se consultará a expertos para la realización del plan de proyecto.
+
+  - Severidad (8): La severidad se mantiene.
+
+  - Probabilidad de ocurrencia (3): Disminuye la probabilidad de mala planificación.
 
 
 \section{13. Gestión de la calidad}
 \label{sec:calidad}
 
-\begin{consigna}{red}
-Para cada uno de los requerimientos del proyecto indique:
 \begin{itemize} 
-\item Req \#1: Copiar acá el requerimiento.
-
-Verificación y validación:
-
+\item \textbf{Requerimiento 1.1.1}: El nodo deberá ser capaz de realizar la lectura de un sensor de humedad y temperatura.
 \begin{itemize}
-\item Verificación para confirmar si se cumplió con lo requerido antes de mostrar el sistema al cliente:\\
-Detallar 
-\item Validación con el cliente para confirmar que está de acuerdo en que se cumplió con lo requerido:\\
-Detallar  
+\item[•] Verificación: Se comprobará la habilitación de interfaces de comunicación en el software desarrollado.
+\item[•] Validación: Se registrará la información adquirida de los sensores.
+\end{itemize}
+
+\item \textbf{Requerimiento 1.1.2}: El nodo deberá transmitir información de los sensores conectados de manera periódica.
+\begin{itemize}
+\item[•] Verificación: Se comprobará mediante documentación y diagramas esquemáticos.
+\item[•] Validación: Se comprobará la periodicidad con la que se almacenan los datos en la base de datos del lado receptor.
+\end{itemize}
+
+\item \textbf{Requerimiento 1.1.3}: La transmisión deberá ser implementada utlizando LoRa.
+\begin{itemize}
+\item[•] Verificación: Se comprobará mediante documentación del transceiver utilizado.
+\item[•] Validación: El cliente verificará las especificaciones del módulo de comunicación utilizado y se realizará una muestra de que la comunicación se realiza de manera inalámbrica.
+\end{itemize}
+
+\item \textbf{Requerimiento 1.1.4}: La alimentación deberá ser implementada mediante baterías AAA.
+\begin{itemize}
+\item[•] Verificación: Se comprobará que el hardware utilizado cuente con los conectores necesarios para la alimentación requerida.
+\item[•] Validación: Inspección del módulo.
+\end{itemize}
+
+\item \textbf{Requerimiento 1.1.5}: El nodo deberá tener un sleep-mode configurable para administrar la duración de la batería.
+\begin{itemize}
+\item[•] Verificación: Se comprobará que el diseño de software contemple esta función.
+\item[•] Validación: Se probará el nodo en las distintas configuraciones, verificando su comportamiento.
+\end{itemize}
+
+\item \textbf{Requerimiento 1.1.6}: El nodo deberá informar de manera visual cuando tenga poca batería.
+\begin{itemize}
+\item[•] Verificación: Se comprobará el diseño del módulo encargado de la visualización del estado de batería baja.
+\item[•] Validación: Se probará al módulo en un estado de batería baja, confirmando que éste lo notifica de manera visual.
+\end{itemize}
+
+\item \textbf{Requerimiento 1.1.7}: El nivel bajo de batería deberá ser informado al nodo receptor.
+\begin{itemize}
+\item[•] Verificación: Se comprobará el diseño del módulo encargado de la transmisión de datos.
+\item[•] Validación: Se probará al nodo en un estado de batería baja, revisando que del lado receptor se reciba la notificación correspondiente.
+\end{itemize}
+
+\item \textbf{Requerimiento 1.1.8}: El nodo deberá informar de manera visual cuando realice una transmisión.
+\begin{itemize}
+\item[•] Verificación: Se comprobará el diseño del módulo encargado de la transmisión de datos.
+\item[•] Validación: Se demostrará la funcionalidad en una prueba de concepto.
+\end{itemize}
+
+\item \textbf{Requerimiento 1.2.1}: El nodo deberá recibir información de manera inalámbrica utilizando LoRa.
+\begin{itemize}
+\item[•] Verificación: Se comprobará mediante documentación del transceiver utilizado.
+\item[•] Validación: El cliente verificará las especificaciones del módulo de comunicación utilizado y se realizará una muestra de que la comunicación se realiza de manera inalámbrica.
+\end{itemize}
+
+\item \textbf{Requerimiento 1.2.2}: El nodo deberá informar de manera visual cuando reciba datos.
+\begin{itemize}
+\item[•] Verificación: Se comprobará el diseño del módulo de recepción de datos.
+\item[•] Validación: Se demostrará la funcionalidad en una prueba de concepto.
+\end{itemize}
+
+\item \textbf{Requerimiento 1.2.3}: El nodo deberá reenviar la información recibida hacia la PC utilizada para el almacenamiento de datos.
+\begin{itemize}
+\item[•] Verificación: Se comprobará que el diseño de firmware contemple la funcionalidad.
+\item[•] Validación: Se demostrará la funcionalidad en una prueba de concepto.
+\end{itemize}
+
+\item \textbf{Requerimiento 1.3.1}: La información recibida del nodo receptor deberá ser almacenada en una base de datos.
+\begin{itemize}
+\item[•] Verificación: Se comprobará el diseño de software destinado a cumplir el requerimiento.
+\item[•] Validación: Se demostrará la funcionalidad en una prueba de concepto.
+\end{itemize}
+
+\item \textbf{Requerimiento 1.3.2}: La herramienta de visualización deberá permitir ver más de una variable a la vez.
+\begin{itemize}
+\item[•] Verificación: Se comprobará el diseño del software de visualización.
+\item[•] Validación: Se demostrará la funcionalidad.
+\end{itemize}
+
+\item \textbf{Requerimiento 1.3.3}: La herramienta de visualización deberá permitir configurar el span de tiempo que se quiere ver.
+\begin{itemize}
+\item[•] Verificación: Se comprobará el diseño del software de visualización.
+\item[•] Validación: Se demostrará la funcionalidad.
+\end{itemize}
+
+
+\item \textbf{Grupo de requerimientos 2.1}:
+\begin{itemize}
+\item[•] Verificación: Se comprobará que en la planificación se destinó tiempo a realizar estas tareas.
+\item[•] Validación: Mediante los entregables del proyecto.
+\end{itemize}
+
+\item \textbf{Requerimiento 2.2.1}: Deberán realizarse pruebas de funcionamiento del sistema antes de su entrega-
+\begin{itemize}
+\item[•] Verificación: Se comprobará el desarrollo de pruebas de aceptación.
+\item[•] Validación: Se registrará el resultado de las pruebas de aceptación.
 \end{itemize}
 
 \end{itemize}
 
-Tener en cuenta que en este contexto se pueden mencionar simulaciones, cálculos, revisión de hojas de datos, consulta con expertos, etc.
-
-\end{consigna}
 
 \section{14. Comunicación del proyecto}
 \label{sec:comunicaciones}
 
-\begin{consigna}{red}
 El plan de comunicación del proyecto es el siguiente:
-\end{consigna}
 
-% Please add the following required packages to your document preamble:
-% \usepackage{graphicx}
-% \usepackage[table,xcdraw]{xcolor}
-% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
-\begin{table}[htpb]
-\centering
-\resizebox{\textwidth}{!}{%
+\begin{table}[htbp]
 \begin{tabular}{|c|c|c|c|c|c|}
 \hline
 \rowcolor[HTML]{C0C0C0} 
-\multicolumn{6}{|c|}{\cellcolor[HTML]{C0C0C0}PLAN DE COMUNICACIÓN DEL PROYECTO}           \\ \hline
+\multicolumn{6}{|c|}{\cellcolor[HTML]{C0C0C0}PLAN DE COMUNICACIÓN DEL PROYECTO}                                                                                                                                                                                                                                                                                                                                                                 \\ \hline
 \rowcolor[HTML]{C0C0C0} 
-¿Qué comunicar? & Audiencia & Propósito & Frecuencia & Método de comunicac. & Responsable \\ \hline
-                &           &           &            &                      &             \\ \hline
-                &           &           &            &                      &             \\ \hline
-                &           &           &            &                      &             \\ \hline
-                &           &           &            &                      &             \\ \hline
-                &           &           &            &                      &             \\ \hline
-\end{tabular}%
-}
+\begin{tabular}[c]{@{}c@{}}¿Qué \\ comunicar?\end{tabular}                      & Audiencia                                                                & Propósito                                                                                           & Frecuencia                                                      & \begin{tabular}[c]{@{}c@{}}Método de\\ comunicación\end{tabular}                           & Responsable   \\ \hline
+\begin{tabular}[c]{@{}c@{}}Definición\\ de objetivos\\ y alcances\end{tabular}  & \begin{tabular}[c]{@{}c@{}}Director, \\ Cliente\end{tabular}             & Evaluación                                                                                          & \begin{tabular}[c]{@{}c@{}}Inicio\\ del proyecto\end{tabular}   & \begin{tabular}[c]{@{}c@{}}Correos\\ electrónicos,\\ reuniones\\ virtuales\end{tabular}    & Pablo Aguirre \\ \hline
+\begin{tabular}[c]{@{}c@{}}Avances y \\ dificultades\\ encontradas\end{tabular} & \begin{tabular}[c]{@{}c@{}}Director,\\ Cliente\end{tabular}              & \begin{tabular}[c]{@{}c@{}}Solución de \\ inconvenientes\\ e información \\ de avances\end{tabular} & Quincenal                                                       & \begin{tabular}[c]{@{}c@{}}Correos \\ electrónicos,\\ reuniones \\ virtuales.\end{tabular} & Pablo Aguirre \\ \hline
+\begin{tabular}[c]{@{}c@{}}Informe de \\ avances\end{tabular}                   & Director                                                                 & \begin{tabular}[c]{@{}c@{}}Registro de\\  evolución del \\ proyecto\end{tabular}                    & \begin{tabular}[c]{@{}c@{}}A mitad\\ del proyecto\end{tabular}  & \begin{tabular}[c]{@{}c@{}}Correos\\ electrónicos\end{tabular}                             & Pablo Aguirre \\ \hline
+\begin{tabular}[c]{@{}c@{}}Finalización \\ y cierre\end{tabular}                & \begin{tabular}[c]{@{}c@{}}Jurado,\\ Director\\ y\\ Cliente\end{tabular} & \begin{tabular}[c]{@{}c@{}}Finalización \\ del proyecto\end{tabular}                                & \begin{tabular}[c]{@{}c@{}}Al final\\ del proyecto\end{tabular} & \begin{tabular}[c]{@{}c@{}}Correos\\ electrónicos\end{tabular}                             & Pablo Aguirre \\ \hline
+\end{tabular}
 \end{table}
 
 \section{15. Gestión de compras}
 \label{sec:compras}
 
-\begin{consigna}{red}
-En caso de tener que comprar elementos o contratar servicios:
-a) Explique con qué criterios elegiría a un proveedor.
-b) Redacte el Statement of Work correspondiente.
-\end{consigna}
+Para la concreción del proyecto no será necesaria la compra de componentes dado que se utilizarán materiales ya disponibles en la empresa cliente.
 
 \section{16. Seguimiento y control}
 \label{sec:seguimiento}
 
-\begin{consigna}{red}
-Para cada tarea del proyecto establecer la frecuencia y los indicadores con los se seguirá su avance y quién será el responsable de hacer dicho seguimiento y a quién debe comunicarse la situación (en concordancia con el Plan de Comunicación del proyecto).
-
-El indicador de avance tiene que ser algo medible, mejor incluso si se puede medir en \% de avance. Por ejemplo,se pueden indicar en esta columna cosas como ``cantidad de conexiones ruteadeas'' o ``cantidad de funciones implementadas'', pero no algo genérico y ambiguo como ``\%'', porque el lector no sabe porcentaje de qué cosa.
-
-\end{consigna}
-
-\begin{table}[!htpb]
-\centering
-\begin{tabularx}{\linewidth}{@{}|X|X|X|X|X|X|@{}}
+\begin{table}[htbp]
+\begin{tabular}{|c|c|c|c|c|c|}
 \hline
 \rowcolor[HTML]{C0C0C0} 
-\multicolumn{6}{|c|}{\cellcolor[HTML]{C0C0C0}SEGUIMIENTO DE AVANCE}                                                                       \\ \hline
-\rowcolor[HTML]{C0C0C0} 
-Tarea del WBS & Indicador de avance & Frecuencia de reporte & Resp. de seguimiento & Persona a ser informada & Método de comunic. \\ \hline
- &  &  &  &  &  \\ \hline
- &  &  &  &  &  \\ \hline
- &  &  &  &  &  \\ \hline
- &  &  &  &  &  \\ \hline
- &  &  &  &  &  \\ \hline
-\end{tabularx}%
-%}
+\begin{tabular}[c]{@{}c@{}}Tarea\\ del\\ WBS\end{tabular} & \begin{tabular}[c]{@{}c@{}}Indicador de\\ avance\end{tabular}           & \begin{tabular}[c]{@{}c@{}}Frecuencia de\\ reporte\end{tabular} & Responsable & \begin{tabular}[c]{@{}c@{}}Persona a ser\\ informada\end{tabular} & \begin{tabular}[c]{@{}c@{}}Método\\ de\\ comunicación\end{tabular} \\ \hline
+1.1                                                       & \% de avance                                                            & Semanal                                                         & PM          & \begin{tabular}[c]{@{}c@{}}Director,\\ Cliente\end{tabular}       & \begin{tabular}[c]{@{}c@{}}Correo\\ electrónico\end{tabular}       \\ \hline
+1.2                                                       & \% de avance                                                            & Al finalizar                                                    & PM          & \begin{tabular}[c]{@{}c@{}}Director\\ \end{tabular}       & \begin{tabular}[c]{@{}c@{}}Correo\\ electrónico\end{tabular}       \\ \hline
+1.3                                                       & \% de avance                                                            & Al finalizar                                                    & PM          & \begin{tabular}[c]{@{}c@{}}Director,\\ Cliente\end{tabular}       & \begin{tabular}[c]{@{}c@{}}Correo\\ electrónico\end{tabular}       \\ \hline
+1.4                                                       & \% de avance                                                            & Al finalizar                                                    & PM          & \begin{tabular}[c]{@{}c@{}}Director,\\ Cliente\end{tabular}       & \begin{tabular}[c]{@{}c@{}}Correo\\ electrónico\end{tabular}       \\ \hline
+1.5                                                       & \% de avance                                                            & Al finalizar                                                    & PM          & Cliente                                                           & \begin{tabular}[c]{@{}c@{}}Correo\\ electrónico\end{tabular}       \\ \hline
+1.6                                                       & \% de avance                                                            & Semanal                                                         & PM          & Director                                                          & \begin{tabular}[c]{@{}c@{}}Correo\\ electrónico\end{tabular}       \\ \hline
+1.7                                                       & \% de avance                                                            & Al finalizar                                                    & PM          & Director                                                          & \begin{tabular}[c]{@{}c@{}}Correo\\ electrónico\end{tabular}       \\ \hline
+2                                                         & \begin{tabular}[c]{@{}c@{}}\% información\\ analizada\end{tabular}      & Quincenal                                                       & PM          & Director                                                          & \begin{tabular}[c]{@{}c@{}}Correo\\ electrónico\end{tabular}       \\ \hline
+3.1                                                       & \% de avance                                                            & Al finalizar                                                    & PM          & \begin{tabular}[c]{@{}c@{}}Director,\\ Cliente\end{tabular}       & \begin{tabular}[c]{@{}c@{}}Correo\\ electrónico\end{tabular}       \\ \hline
+3.2                                                       & \% de avance                                                            & Quincenal                                                       & PM          & \begin{tabular}[c]{@{}c@{}}Director,\\ cliente\end{tabular}       & \begin{tabular}[c]{@{}c@{}}Correo\\ electrónico\end{tabular}       \\ \hline
+3.3                                                       & \% de avance                                                            & Quincenal                                                       & PM          & \begin{tabular}[c]{@{}c@{}}Director,\\ cliente\end{tabular}       & \begin{tabular}[c]{@{}c@{}}Correo\\ electrónico\end{tabular}       \\ \hline
+3.4                                                       & \begin{tabular}[c]{@{}c@{}}\% de funciones\\ implementadas\end{tabular} & Al finalizar                                                    & PM          & \begin{tabular}[c]{@{}c@{}}Director,\\ cliente\end{tabular}       & \begin{tabular}[c]{@{}c@{}}Correo\\ electrónico\end{tabular}       \\ \hline
+3.5                                                       & \% de avance                                                            & Al finalizar                                                    & PM          & \begin{tabular}[c]{@{}c@{}}Director,\\ cliente\end{tabular}       & \begin{tabular}[c]{@{}c@{}}Correo\\ electrónico\end{tabular}       \\ \hline
+3.6                                                       & \% de avance                                                            & Al finalizar                                                    & PM          & \begin{tabular}[c]{@{}c@{}}Director,\\ cliente\end{tabular}       & \begin{tabular}[c]{@{}c@{}}Correo\\ electrónico\end{tabular}       \\ \hline
+3.7                                                       & \% de avance                                                            & Semanal                                                         & PM          & Director                                                          & \begin{tabular}[c]{@{}c@{}}Correo\\ electrónico\end{tabular}       \\ \hline
+3.8                                                       & \% de avance                                                            & Al finalizar                                                    & PM          & \begin{tabular}[c]{@{}c@{}}Director,\\ cliente\end{tabular}       & \begin{tabular}[c]{@{}c@{}}Correo\\ electrónico\end{tabular}       \\ \hline
+4                                                         & \begin{tabular}[c]{@{}c@{}}\% de pruebas\\ realizadas\end{tabular}      & Semanal                                                         & PM          & \begin{tabular}[c]{@{}c@{}}Director,\\ cliente\end{tabular}       & \begin{tabular}[c]{@{}c@{}}Correo\\ electrónico\end{tabular}       \\ \hline
+\end{tabular}
 \end{table}
 
 \section{17. Procesos de cierre}    
 \label{sec:cierre}
 
-\begin{consigna}{red}
-Establecer las pautas de trabajo para realizar una reunión final de evaluación del proyecto, tal que contemple las siguientes actividades:
-
 \begin{itemize}
 \item Pautas de trabajo que se seguirán para analizar si se respetó el Plan de Proyecto original:
- - Indicar quién se ocupará de hacer esto y cuál será el procedimiento a aplicar. 
-\item Identificación de las técnicas y procedimientos útiles e inútiles que se utilizaron, y los problemas que surgieron y cómo se solucionaron:
- - Indicar quién se ocupará de hacer esto y cuál será el procedimiento para dejar registro.
-\item Indicar quién organizará el acto de agradecimiento a todos los interesados, y en especial al equipo de trabajo y colaboradores:
-  - Indicar esto y quién financiará los gastos correspondientes.
+
+ - Persona a cargo: Pablo Aguirre.
+ 
+ - Procedimiento:
+ \begin{itemize}
+ \item[•] Se revisará el cumplimiento de todos los requerimientos y con esto evaluar la calidad del proyecto.
+ \item[•] Se analizará si la asignación de tiempos para las tareas fue correcta y si se respetó.
+ \end{itemize}
+
+\item Identificación de las técnicas y procedimientos útiles e inútiles que se utilizaron, los problemas que surgieron, y cómo se solucionaron:
+
+ - Persona a cargo: Pablo Aguirre.
+ 
+ - Procedimiento:
+ \begin{itemize}
+ \item[•] Se analizarán los problemas ocurridos y la forma en que se les dio solución, basados en la optimización del tiempo en la solución de los mismos.
+ \item[•] Se evaluará si el diseño de software fue correcto.
+ \end{itemize}
+ 
+ \item Indicar quién organizará el acto de agradecimiento a todos los interesados, y en especial al equipo de trabajo y colaboradores:
+ 
+ - Persona a cargo: Pablo Aguirre.
+ 
+ - Procedimiento:
+ \begin{itemize}
+ \item[•] Finalizado el proyecto se les informará y agradecerá a todos los miembros del equipo, director del trabajo, miembros del jurado y autoridades de la CESE.
+ \end{itemize}
+
 \end{itemize}
 
-\end{consigna}
 
 
 \end{document}
